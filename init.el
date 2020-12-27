@@ -34,8 +34,8 @@
 (require 'use-package)
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
-	 ("C-s" . swiper)
-         ("C-x b" . counsel-switch-buffer) ;; realtime buffer display
+	 ("M-s" . swiper)
+         ("C-x b" . counsel-ibuffer) ;; realtime buffer display
          ("C-x C-f" . counsel-find-file)
          ))
 
@@ -43,13 +43,37 @@
 (windmove-default-keybindings) ;move between window with S-direction
 ;; override S-direction key in org-mode
 
-(org-mode)
-(define-key org-mode-map (kbd "<S-right>") nil)
-(define-key org-mode-map (kbd "<S-left>") nil)
-(define-key org-mode-map (kbd "<S-up>") nil)
-(define-key org-mode-map (kbd "<S-down>") nil)
+; (org-mode)
+; (define-key org-mode-map (kbd "<S-right>") nil)
+; (define-key org-mode-map (kbd "<S-left>") nil)
+; (define-key org-mode-map (kbd "<S-up>") nil)
+; (define-key org-mode-map (kbd "<S-down>") nil)
 
 
 (desktop-read "~/.emacs.d") ;; read .emacs.desktop
 
 (load-theme 'doom-one)
+
+(column-number-mode) ; turn on column number display in mode line
+
+ 
+(unless (package-installed-p 'which-key) 
+  (package-install 'which-key))
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode)
+;  :config 
+
+; map cap key to ctrl
+(shell-command "xmodmap /home/user/emacs.xmodmap")
+
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+;; ggtags mode works for c-mode
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+              (ggtags-mode 1))))
+(add-hook 'python-mode-hook 'ggtags-mode)
